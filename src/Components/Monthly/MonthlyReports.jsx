@@ -10,7 +10,7 @@ import {
   TableBody,
   Button,
   Typography,
-  Popover,
+ MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +21,19 @@ import { SnackContext, UserContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 const axios = require("axios");
+const years = [
+  { id: "1", year: "2020-2021" },
+  { id: "2", year: "2021-2022" },
+  { id: "3", year: "2022-2023" },
+  { id: "4", year: "2023-2024" },
+  { id: "5", year: "2024-2025" },
+  { id: "6", year: "2025-2026" },
+  { id: "7", year: "2026-2027" },
+  { id: "8", year: "2027-2028" },
+  { id: "9", year: "2028-2029 " },
+  { id: "10", year: "2029-2030" },
+  
+];
 
 export function MonthlyReports() {
   const { userProfile, setUserProfile } = useContext(UserContext);
@@ -29,6 +42,7 @@ export function MonthlyReports() {
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState(undefined);
   const [name, setName] = useState();
+  const [year,setYear] = useState();
   const [dialog_open, setDialog_open] = useState(false);
   const [month_value, setMonth_value] = useState({});
   const [opend, setOpend] = useState(false);
@@ -36,12 +50,19 @@ export function MonthlyReports() {
   const [opende, setOpende] = useState(false);
   const navigate = useNavigate();
   
-  useEffect(() => {
-    getdata();
-  }, []);
+  // useEffect(() => {
+  //   getdata();
+  // }, []);
 
   const getdata = async () => {
-    await axios.get("/api/monthly_reports").then((res) => {
+   const years = year.split("-");
+    console.log(years[0]);
+    console.log(years[1]);
+    const formdata = new FormData()
+    formdata.append('year',years[0]);
+    formdata.append("year1",years[1]);
+    console.log("cdfc")
+    await axios.post("/api/monthly_reports",formdata).then((res) => {
       console.log("hiiiiiii");
       if (res.data.status === true) {
         console.log("hi");
@@ -241,23 +262,39 @@ export function MonthlyReports() {
               </Button>
             </div>
           )}
-          <TextField
-            sx={{
-              border: "4px solid",
-              borderRadius: "8px",
-              borderColor: "#d9d9d9",
-              width: "10%",
-            }}
-            type="number"
-            defaultValue="2022"
+         <TextField
+             select
+            fullwidth
+            size="small"
+            label=" Year"
+           name="year"
+           value={year}
             variant="outlined"
-          />
+           
+            sx={{
+              borderRadius: "8px",
+              width: "15%",
+            }}
+            onChange={(e) => setYear(e.target.value)}
+          >
+           {years.map((yearly) => (
+              <MenuItem value={yearly.year}>{yearly.year}</MenuItem>
+            ))}
+          </TextField>      
+          <Button type="submit" variant="contained" onClick={getdata}>
+            search
+          </Button>
         </Grid>
-        <Box sx={{ my: 5,
-        display: "flex",
-        height: 500,
-        overflow: "hidden", 
-        }}>
+        <Box 
+        sx={{
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: 500,
+          // width: 1000,
+          overflow: "hidden",
+        }}
+        >
           <TableContainer component={Paper}>
             <Table stickyHeader size="small">
               <TableHead sx={{ backgroundColor: "#2f7d32" }}>
@@ -294,7 +331,8 @@ export function MonthlyReports() {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {loading ? (
+              {
+              loading ? (
                 <></>
               ) : (
                 data.map((i) => (
@@ -380,12 +418,12 @@ export function MonthlyReports() {
             </Table>
           </TableContainer>
         </Box>
-        {loading && (
+        {/* {loading && (
           <div style={{ textAlign: "center" }}>
             <CircularProgress />
             <Typography variant="h4">Please wait......</Typography>
           </div>
-        )}
+        )} */}
         <Dialog
           open={opend}
           onClose={() => {

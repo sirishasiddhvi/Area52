@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext ,useEffect} from "react";
 import { SnackContext } from "../Context/UserContext";
 import {
   Box,
@@ -19,34 +19,66 @@ import {
   DialogContentText,
   Typography,
 } from "@mui/material";
+import moment from 'moment';
 const axios = require("axios");
 
 export function FollowUp2() {
-  const [month, setMonth] = useState();
+  // const [month, setMonth] = useState();
   const [loading, setLoading] = useState();
   const [data, setData] = useState([]);
   const { snack, setSnack } = useContext(SnackContext);
   const [open, setOpen] = useState(false);
   const [store_no, setStore_no] = useState();
+  const [poc_name, setPoc_name] = useState();
+  const [poc_mobile,setPoc_mobile ] = useState();
+  const [poc_email,setPoc_email ] = useState();
   const [follow_1, setFollow_1] = useState();
   const [follow_2, setFollow_2] = useState();
   const [follow_3, setFollow_3] = useState();
   const [bill_paid, setBill_paid] = useState();
   const [notes, setNotes] = useState();
+  var today = new Date();
+  console.log(today);
+  var month_now= moment(today).format('MMMM')
+  const [month, setMonth] = useState(month_now);
+  console.log(month);
   const month_name = [
-    { id: "01-2022", month: "january" },
-    { id: "02-2022", month: "february" },
-    { id: "03-2022", month: "march" },
-    { id: "04-2022", month: "april" },
-    { id: "05-2022", month: "may" },
-    { id: "06-2022", month: "june" },
-    { id: "07-2022", month: "july" },
-    { id: "08-2022", month: "august" },
+    { id: "01-2022", month: "January" },
+    { id: "02-2022", month: "February" },
+    { id: "03-2022", month: "March" },
+    { id: "04-2022", month: "April" },
+    { id: "05-2022", month: "May" },
+    { id: "06-2022", month: "June" },
+    { id: "07-2022", month: "July" },
+    { id: "08-2022", month: "August" },
     { id: "09-2022", month: "september " },
-    { id: "10-2022", month: "october" },
-    { id: "11-2022", month: "november" },
-    { id: "12-2022", month: "december" },
+    { id: "10-2022", month: "October" },
+    { id: "11-2022", month: "November" },
+    { id: "12-2022", month: "December" },
   ];
+  useEffect(() => {
+    const formdata = new FormData();
+    formdata.append("month", month_now);
+    axios.post("/api/follow_monthly", formdata).then(function(res) {
+      if (res.data.status === true) {
+        // console.log(month);
+        console.log(res.data.data);
+        setData(res.data.data);
+        setLoading(false);
+        setSnack({
+          message: res.data.msg,
+          type: "success",
+          open: true,
+        });
+      } else {
+        setSnack({
+          message: res.data.msg,
+          type: "error",
+          open: true,
+        });
+      }
+    })
+  }, []);
  
   const monthSubmit = async (e) => {
     e.preventDefault();
@@ -79,6 +111,10 @@ export function FollowUp2() {
     const formdata = new FormData();
     formdata.append("month", month);
     formdata.append("store_no", store_no);
+    formdata.append("poc_name", poc_name);
+    formdata.append("poc_mobile", poc_mobile);
+    formdata.append("poc_email", poc_email);
+
     formdata.append("follow1", follow_1);
     formdata.append("follow2", follow_2);
     formdata.append("follow3", follow_3);
@@ -136,7 +172,7 @@ export function FollowUp2() {
             }}
             onChange={(e) => setMonth(e.target.value)}
           >
-            {month_name.map((months) => (
+            {month_name.map((months) => (             
               <MenuItem value={months.month}>{months.month}</MenuItem>
             ))}
           </TextField>
@@ -201,7 +237,7 @@ export function FollowUp2() {
                     <TableCell>{data.store_code}</TableCell>
                     <TableCell>{data.store_name}</TableCell>
                     <TableCell>{data.poc_name}</TableCell>
-                    <TableCell>{data.poc_no}</TableCell>
+                    <TableCell>{data.poc_mobile}</TableCell>
                     <TableCell>{data.poc_email}</TableCell>
                     <TableCell>{data.follow1}</TableCell>
                     <TableCell>{data.follow2}</TableCell>
@@ -215,6 +251,9 @@ export function FollowUp2() {
                         onClick={() => {
                           // editData(data.store_no);
                           setStore_no(data.store_no);
+                          setPoc_name(data.poc_name);
+                          setPoc_mobile(data.poc_mobile);
+                          setPoc_email(data.poc_email);
                           setFollow_1(data.follow1);
                           setFollow_2(data.follow2);
                           setFollow_3(data.follow3);
@@ -239,30 +278,71 @@ export function FollowUp2() {
           }}
         >
           <form onSubmit={handleSubmit}>
-            <DialogContent>
-              <DialogContentText>
-                <Box
+          <Box
                   sx={{
-                    height: "490px",
-                    width: "200px",
+                    height: "50%",
+                    width: "95%",
                   }}
                 >
+            <DialogContent>
+              <DialogContentText>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-around"
+                  alignItems="center"
+                >
+                   <Grid container >
+                    <Typography  sx={{my:2,mx:15}}  variant="h5">followUp MonthlyReports</Typography>
+                   </Grid>
+                 <Grid item xs={12} sm={6} md={6} >
                    <TextField
+                   disabled
                     size="small"
                     name="month"
                     label="Month"
                     value={month}
                     sx={{ m: 2, width: "80%" }}
                     onChange={(e) => setMonth(e.target.value)}
-                  ></TextField>
+                  ></TextField></Grid>
+                    <Grid item xs={12} sm={6} md={6} >
                   <TextField
+                  disabled
                     size="small"
                     name="storeno"
                     label="Store No."
                     value={store_no}
                     sx={{ m: 2, width: "80%" }}
                     onChange={(e) => setStore_no(e.target.value)}
-                  ></TextField>
+                  ></TextField></Grid>
+                    <Grid item xs={12} sm={6} md={6} >
+                  <TextField
+                    size="small"
+                    name="pocname"
+                    label="POC Name."
+                    value={poc_name}
+                    sx={{ m: 2, width: "80%" }}
+                    onChange={(e) => setPoc_name(e.target.value)}
+                  ></TextField></Grid>
+                    <Grid item xs={12} sm={6} md={6} >
+                  <TextField
+                    size="small"
+                    name="pocmobile"
+                    label="POC Mobile Number"
+                    value={poc_mobile}
+                    sx={{ m: 2, width: "80%" }}
+                    onChange={(e) => setPoc_mobile(e.target.value)}
+                  ></TextField></Grid>
+                    <Grid item xs={12} sm={6} md={6} >
+                  <TextField
+                    size="small"
+                    name="pocemail"
+                    label="POC Email"
+                    value={poc_email}
+                    sx={{ m: 2, width: "80%" }}
+                    onChange={(e) => setPoc_email(e.target.value)}
+                  ></TextField></Grid>
+                    <Grid item xs={12} sm={6} md={6} >
                   <TextField
                     select
                     size="small"
@@ -275,7 +355,8 @@ export function FollowUp2() {
                     <MenuItem value="">--None--</MenuItem>
                     <MenuItem value="Yes">Yes</MenuItem>
                     <MenuItem value="No">No</MenuItem>
-                  </TextField>
+                  </TextField></Grid>
+                  <Grid item xs={12} sm={6} md={6} >
                   <TextField
                     select
                     size="small"
@@ -288,7 +369,8 @@ export function FollowUp2() {
                     <MenuItem value="">--None--</MenuItem>
                     <MenuItem value="Yes">Yes</MenuItem>
                     <MenuItem value="No">No</MenuItem>
-                  </TextField>
+                  </TextField></Grid>
+                  <Grid item xs={12} sm={6} md={6} >
                   <TextField
                     select
                     size="small"
@@ -302,7 +384,8 @@ export function FollowUp2() {
                     <MenuItem value="">--None--</MenuItem>
                     <MenuItem value="Yes">Yes</MenuItem>
                     <MenuItem value="No">No</MenuItem>
-                  </TextField>
+                  </TextField></Grid>
+                  <Grid item xs={12} sm={6} md={6} >
                   <TextField
                     select
                     size="small"
@@ -315,7 +398,8 @@ export function FollowUp2() {
                     <MenuItem value="">--None--</MenuItem>
                     <MenuItem value="Yes">Yes</MenuItem>
                     <MenuItem value="No">No</MenuItem>
-                  </TextField>
+                  </TextField></Grid>
+                  <Grid item xs={12} sm={6} md={6} >
                   <TextField
                     size="small"
                     name="notes"
@@ -323,8 +407,9 @@ export function FollowUp2() {
                     value={notes}
                     sx={{ m: 2, width: "80%" }}
                     onChange={(e) => setNotes(e.target.value)}
-                  ></TextField>
-                </Box>
+                  ></TextField></Grid>
+                  </Grid>
+                {/* </Box> */}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -349,6 +434,7 @@ export function FollowUp2() {
                 </Button>
               </Grid>
             </DialogActions>
+            </Box>
           </form>
         </Dialog>
       </Box>
