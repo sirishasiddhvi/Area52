@@ -17,8 +17,9 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  Typography,
+  Typography,IconButton
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import moment from 'moment';
 const axios = require("axios");
 
@@ -39,6 +40,7 @@ export function FollowUp2() {
   const [notes, setNotes] = useState();
   var today = new Date();
   console.log(today);
+  console.log(moment(today).format('YYYY'));
   var month_now= moment(today).format('MMMM')
   const [month, setMonth] = useState(month_now);
   console.log(month);
@@ -51,7 +53,7 @@ export function FollowUp2() {
     { id: "06-2022", month: "June" },
     { id: "07-2022", month: "July" },
     { id: "08-2022", month: "August" },
-    { id: "09-2022", month: "september " },
+    { id: "09-2022", month: "September " },
     { id: "10-2022", month: "October" },
     { id: "11-2022", month: "November" },
     { id: "12-2022", month: "December" },
@@ -59,6 +61,7 @@ export function FollowUp2() {
   useEffect(() => {
     const formdata = new FormData();
     formdata.append("month", month_now);
+    setLoading(true);
     axios.post("/api/follow_monthly", formdata).then(function(res) {
       if (res.data.status === true) {
         // console.log(month);
@@ -82,6 +85,7 @@ export function FollowUp2() {
  
   const monthSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log(month);
     const formdata = new FormData();
     formdata.append("month", month);
@@ -168,7 +172,7 @@ export function FollowUp2() {
             value={month}
             sx={{
               borderRadius: "8px",
-              width: "10%",
+              width: "15%",
             }}
             onChange={(e) => setMonth(e.target.value)}
           >
@@ -182,7 +186,7 @@ export function FollowUp2() {
           </Button>
         </Grid>
       </form>
-      <Box sx={{ m: 2, height: 500, display: "flex", overflow: "hidden" }}>
+      <Box sx={{ m: 2, height: 500,width:1000, display: "flex", overflow: "hidden" }}>
         <TableContainer component={Paper} sx={{ backgroundColor: "#f9f2e8" }}>
           <Table stickyHeader size="small">
             <TableHead sx={{ backgroundColor: "#2f7d32",color:"white" }}>
@@ -196,7 +200,7 @@ export function FollowUp2() {
                 <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
                   <Typography>Store Code</Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"95%"}}>
                   <Typography>Store Name</Typography>
                 </TableCell>
                 <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
@@ -205,19 +209,19 @@ export function FollowUp2() {
                 <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
                   <Typography> POC Mob. </Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                   <Typography>M&S Email </Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
-                  <Typography> follow-1</Typography>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"15%"}}>
+                  <Typography> Follow-1</Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
-                  <Typography> follow-2</Typography>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"15%"}}>
+                  <Typography> Follow-2</Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
-                  <Typography> follow-3</Typography>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
+                  <Typography> Follow-3</Typography>
                 </TableCell>
-                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
+                <TableCell sx={{ backgroundColor: "#2f7d32",color:"white",width:"5%"}}>
                   <Typography>Bill Paid</Typography>
                 </TableCell>
                 <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}>
@@ -226,10 +230,10 @@ export function FollowUp2() {
                 <TableCell sx={{ backgroundColor: "#2f7d32",color:"white"}}></TableCell>
               </TableRow>
             </TableHead>
-            {loading ? (
+            {/* {loading ? (
               <></>
-            ) : (
-              data.map((data) => (
+            ) : ( */}
+             { data.map((data) => (
                 <TableBody sx={{ backgroundColor: "white"}}>
                   <TableRow>
                     <TableCell>{data.id}</TableCell>
@@ -267,10 +271,25 @@ export function FollowUp2() {
                     </TableCell>
                   </TableRow>
                 </TableBody>
-              ))
+              )
             )}
           </Table>
         </TableContainer>
+         <Dialog open={loading} onClose={() => {}}>
+        <DialogContent>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <IconButton>
+              <CircularProgress />
+            </IconButton>
+            <DialogContentText>Please wait....</DialogContentText>
+          </Grid>
+        </DialogContent>
+      </Dialog>
         <Dialog
           open={open}
           onClose={() => {

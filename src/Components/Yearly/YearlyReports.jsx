@@ -14,6 +14,7 @@ import {
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 const axios = require("axios");
 const years = [
   { id: "1", year: "2020-2021" },
@@ -34,14 +35,49 @@ export function YearlyReports() {
   const [loading, setLoading] = useState(false);
   const [approve, setApprove] = useState("pending");
   const [disable, setDisable] = useState(false);
-  const [year,setYear] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   getdata();
-  // }, []);
+  var today= new Date();
+  var month_now= moment(today).format('MMMM')
+  if (month_now=="January"||month_now=="February"||month_now=="March"){
+    var year_now=moment(today).format('YYYY')-1
+    console.log(year_now)
+  }else{
+    var year_now=moment(today).format('YYYY')
+  }
+  const [year_1,setYear_1]= useState(year_now)
+  const [year,setYear] = useState(year_1+"-"+(year_1+1));
+  
+  useEffect(() => {
+    const formdata= new FormData()
+    formdata.append("year",year_1)
+    formdata.append("year1",year_1+1)
+    axios.post("/api/yearly_reports",formdata).then((res) => {
+      if (res.data.status === true) {
+        console.log("hi");
+        console.log(res.data.data);
+        setData(res.data.data);
+        localStorage.setItem("months",JSON.stringify(res.data.data[0].months))
+        localStorage.setItem("month_1",res.data.data[0].month1)
+        localStorage.setItem("month_2",res.data.data[0].month2)
+        localStorage.setItem("month_3",res.data.data[0].month3)
+        localStorage.setItem("month_4",res.data.data[0].month3)
+        localStorage.setItem("month_5",res.data.data[0].month5)
+        localStorage.setItem("month_6",res.data.data[0].month6)
+        localStorage.setItem("month_7",res.data.data[0].month7)
+        localStorage.setItem("month_8",res.data.data[0].month8)
+        localStorage.setItem("month_9",res.data.data[0].month9)
+        localStorage.setItem("month_10",res.data.data[0].month10)
+        localStorage.setItem("month_11",res.data.data[0].month11)
+        localStorage.setItem("month_12",res.data.data[0].month12)
+        setLoading(false);
+      } else {
+      }
+    });
+    
+  }, []);
   const getdata = async () => {
     console.log(year)
     const years = year.split("-");
@@ -103,7 +139,12 @@ export function YearlyReports() {
           <Button type="submit" variant="contained" onClick={getdata}>
             search
           </Button></Grid>
-      <Box sx={{ my: 5 }}>
+      <Box sx={{  p: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: 500,
+           width: 1000,
+          overflow: "hidden",}}>
         <TableContainer component={Paper}>
           <Table size="small">
             <TableHead sx={{ backgroundColor: "#2f7d32" }}>
@@ -125,6 +166,25 @@ export function YearlyReports() {
                 </TableCell> */}
                 <TableCell>
                   <Typography sx={{color:"white"}}>View Report</Typography>{" "}
+                </TableCell>
+                <TableCell>
+                  <Typography sx={{color:"white"}}> Elec-View </Typography>{" "}
+                </TableCell>
+                <TableCell>
+                  <Typography sx={{color:"white"}}>DG-View </Typography>{" "}
+                </TableCell>
+                <TableCell>
+                  <Typography sx={{color:"white"}}>HVAC-View </Typography>{" "}
+                </TableCell>
+                <TableCell>
+                  <Typography sx={{color:"white"}}>R22-View </Typography>{" "}
+                </TableCell>
+                <TableCell>
+                  <Typography sx={{color:"white"}}>R404-View </Typography>{" "}
+                </TableCell><TableCell>
+                  <Typography sx={{color:"white"}}>R407-View </Typography>{" "}
+                </TableCell><TableCell>
+                  <Typography sx={{color:"white"}}>Other-View </Typography>{" "}
                 </TableCell>
                 {/* <TableCell>
                   <Typography sx={{color:"white"}}>Download Report</Typography>
@@ -193,9 +253,82 @@ export function YearlyReports() {
                       <Button
                         variant="contained"
                         color="warning"
-                        onClick={() => navigate("/Dashboard/yearlyviewreports")}
+                        onClick={() => {
+                          localStorage.setItem("from_1",data.service_fromm)
+                          localStorage.setItem("to_1",data.service_too)
+                          navigate("/Dashboard/yearlyviewreports")}}
                       >
                         view
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyelecreports")}}
+                      >
+                        Elec
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlydgreports")}}
+                      >
+                       DG
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyhvacreports")}}
+                      >
+                       HVAC
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyr22reports")}}
+                      >
+                       R22
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyr404reports")}}
+                      >
+                       R404
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyr407reports")}}
+                      >
+                        R407
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                          navigate("/Dashboard/yearlyotherreports")}}
+                      >
+                       other
                       </Button>
                     </TableCell>
                     {/* <TableCell>

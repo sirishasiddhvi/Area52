@@ -19,7 +19,11 @@ import { StoreInfo } from "../Store/StoreInfo";
 import { MonthlyViewReport } from "../Monthly/MonthlyViewReport";
 import { QuaterlyViewReport } from "../Quarterly/QuaterlyViewReport";
 import { YearlyViewReports } from "../Yearly/YearlyViewReports";
+import { MonthWiseReport } from "../Quarterly/MonthWiseReports";
 import { SnackContext, UserContext } from "../Context/UserContext";
+import {ElecReports} from "../Yearly/ElecReports"
+import {DGReports} from "../Yearly/DGReports"
+import {HVACReports} from "../Yearly/HVACReports"
 
 export function Routers(){
     const { userProfile, setUserProfile } = useContext(UserContext);
@@ -119,6 +123,46 @@ export function Routers(){
           element={
             userProfile && userProfile.admin_role === 1 ? (
               <StoreInfo />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="monthwisereport"
+          element={
+            userProfile && userProfile.admin_role === 1 ? (
+              <MonthWiseReport />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="yearlyelecreports"
+          element={
+            userProfile && userProfile.admin_role === 1 ? (
+              <ElecReports />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="yearlydgreports"
+          element={
+            userProfile && userProfile.admin_role === 1 ? (
+              <DGReports />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="yearlyhvacreports"
+          element={
+            userProfile && userProfile.admin_role === 1 ? (
+              <HVACReports />
             ) : (
               <Navigate to="/" />
             )

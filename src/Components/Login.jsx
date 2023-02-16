@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import React, { useState, useContext } from "react";
 import { useNavigate ,Link} from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 import ms from "../Images/ms.jpeg";
 import { SnackContext, UserContext } from "./Context/UserContext";
 import Visibility from "@mui/icons-material/Visibility";
@@ -287,11 +288,21 @@ export function Login() {
               </DialogActions>
             </form>
           </Dialog>
-          <Dialog open={loading} onClose={() => {}}>
-            <DialogContent>
-              <DialogContentText>Please wait....</DialogContentText>
-            </DialogContent>
-          </Dialog>
+           <Dialog open={loading} onClose={() => {}}>
+        <DialogContent>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <IconButton>
+              <CircularProgress />
+            </IconButton>
+            <DialogContentText>Please wait....</DialogContentText>
+          </Grid>
+        </DialogContent>
+      </Dialog>
         </Box>
       </Container>
     </div>

@@ -9,13 +9,14 @@ import {
   TableBody,
   Button,
   Typography,
-  TextField,Paper,MenuItem
+  TextField,Paper,MenuItem,Dialog,DialogContent,DialogContentText,IconButton
 } from "@mui/material";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import React,{useState,useEffect,useContext} from "react";
 import { SnackContext, UserContext } from "../Context/UserContext";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 import {QuaterlyViewReport} from './QuaterlyViewReport';
 import "react-data-table-component-extensions/dist/index.css";
 const axios=require("axios");
@@ -36,19 +37,47 @@ const years = [
 export function QuaterlyReports() {
   const { snack, setSnack } = useContext(SnackContext);
   const [data, setData] = useState([]);
-  const [year,setYear] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState();
   const [fromDate,setFromDate]=useState({})
   const [toDate,setToDate]=useState({})
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   getdata();
-  // }, []);
+  
+  var today= new Date();
+  var month_now= moment(today).format('MMMM')
+  if (month_now=="January"||month_now=="February"||month_now=="March"){
+    var year_now=moment(today).format('YYYY')-1
+    console.log(year_now)
+  }else{
+    var year_now=moment(today).format('YYYY')
+  }
+  const [year_1,setYear_1]= useState(year_now)
+  const [year,setYear] = useState(year_1+"-"+(year_1+1));
+
+  useEffect(() => {
+  localStorage.setItem("year1",year_1)
+    localStorage.setItem("year2",year_1+1)
+    const formdata= new FormData()
+    formdata.append("year",year_1)
+    formdata.append("year1",year_1+1)
+    axios.post("/api/quarterly_reports",formdata).then((res) => {
+      if (res.data.status === true) {
+        console.log("hi");
+        console.log(res.data.data);
+        setData(res.data.data);
+        setLoading(false);
+      } else {
+      }
+    });  
+  }, []);
 
   const getdata = async() => {
+    setLoading(true)
+    console.log(year)
     const years = year.split("-");
     console.log(years[0]);
     console.log(years[1]);
+    localStorage.setItem("year1",years[0])
+    localStorage.setItem("year2",years[1])
     const formdata = new FormData()
     formdata.append('year',years[0]);
     formdata.append("year1",years[1]);
@@ -110,7 +139,10 @@ export function QuaterlyReports() {
                     <Typography sx={{color:"white"}}> Service to</Typography> 
                   </TableCell>
                   <TableCell>
-                    <Typography sx={{color:"white"}}> View Report</Typography> 
+                    <Typography sx={{color:"white"}}> Report</Typography> 
+                  </TableCell>
+                  <TableCell>
+                  <Typography sx={{color:"white"}}> Monthly Report </Typography> 
                   </TableCell>
                   {/* <TableCell>
                     <Typography sx={{color:"white"}}> Download Report</Typography> 
@@ -120,10 +152,10 @@ export function QuaterlyReports() {
                   </TableCell> */}
                 </TableRow>
               </TableHead>
-              {loading ? (
+              {/* {loading ? (
                 <></>
-              ) : (
-                data.map((data) => (
+              ) : ( */}
+                {data.map((data) => (
                 <TableBody  >
                     <TableRow>
                        <TableCell >
@@ -145,7 +177,21 @@ export function QuaterlyReports() {
                             localStorage.setItem("to",data.service_too)                         
                             navigate("/Dashboard/quaterlyviewreport")}}
                         >
-                          View
+                         view
+                        </Button>
+                        </TableCell >
+                        <TableCell >
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={()=>{  
+                            localStorage.setItem("month1",data.month1)
+                            localStorage.setItem("month2",data.month2)                         
+                            localStorage.setItem("month3",data.month3)                         
+                            localStorage.setItem("quarter",data.quarter)                         
+                            navigate("/Dashboard/monthwisereport")}}
+                        >
+                         view
                         </Button>
                       </TableCell>
                       {/* <TableCell >
@@ -168,11 +214,26 @@ export function QuaterlyReports() {
                       </TableCell> */}
                       </TableRow>
                   </TableBody>
-                )))}
+                ))}
             </Table>
           </TableContainer>
          
         </Box>
+         <Dialog open={loading} onClose={() => {}}>
+        <DialogContent>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <IconButton>
+              <CircularProgress />
+            </IconButton>
+            <DialogContentText>Please wait....</DialogContentText>
+          </Grid>
+        </DialogContent>
+      </Dialog>
         {/* {loading && (
           <div style={{ textAlign: "center" }}>
             <CircularProgress />

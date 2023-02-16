@@ -28,6 +28,16 @@ const[err,setErr]=useState();
     footage: "",
     footagee: "",
     active_status:"",
+    tracker1:"",
+    tracker2:"",
+    tracker3:"",
+    tracker4:"",
+    tracker5:"",
+    tracker6:"",
+    tracker7:"",
+    tracker8:"",
+    tracker9:"",
+    tracker10:"",
   });
   const [stateName, setStateName] = useState("");
   const [city, setCity] = useState([]);
@@ -64,6 +74,16 @@ const[err,setErr]=useState();
           footage: res.data.data.store_foot_m2,
           footagee: res.data.data.store_foot_ft2,
           active_status: res.data.data.active_status,
+          tracker1: res.data.data.tracker1,
+          tracker2: res.data.data.tracker2,
+          tracker3: res.data.data.tracker3,
+          tracker4: res.data.data.tracker4,
+          tracker5: res.data.data.tracker5,
+          tracker6: res.data.data.tracker6,
+          tracker7: res.data.data.tracker7,
+          tracker8: res.data.data.tracker8,
+          tracker9: res.data.data.tracker9,
+          tracker10: res.data.data.tracker10
         });
       } else {
         setSnack({
@@ -84,7 +104,7 @@ const[err,setErr]=useState();
     statuss,
     footage,
     footagee,
-    active_status,
+    active_status,tracker1,tracker2,tracker3,tracker4,tracker5,tracker6,tracker7,tracker8,tracker9,tracker10
   } = store;
   const handlestate = (e) => {
     const statename = e.target.value;
@@ -103,6 +123,7 @@ const[err,setErr]=useState();
   };
   const storeSubmit = async(e) => {
     e.preventDefault();
+    console.log("ttttttttttt")
     if (num.length < 1) {
       setErr(1);
       setSnack({
@@ -196,6 +217,17 @@ const[err,setErr]=useState();
       formdata.append("foot_m2", footage);
       formdata.append("foot_ft2", footagee);
       formdata.append("active_status", active_status);
+      formdata.append("tracker1",tracker1)
+      formdata.append("tracker2",tracker2)
+      formdata.append("tracker3",tracker3)
+      formdata.append("tracker4",tracker4)
+      formdata.append("tracker5",tracker5)
+      formdata.append("tracker6",tracker6)
+      formdata.append("tracker7",tracker7)
+      formdata.append("tracker8",tracker8)
+      formdata.append("tracker9",tracker9)
+      formdata.append("tracker10",tracker10)
+      console.log("ssssssssss")
       await axios.post("/api/update_store", formdata).then(function(res) {
         if (res.data.status === true) {
           setSnack({
@@ -441,43 +473,43 @@ const[err,setErr]=useState();
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker1" fullWidth/>
+             size="small"name="tracker1" value={tracker1} label="tracker1" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker2" fullWidth/>
+             size="small"name="tracker2" value={tracker2} label="tracker2" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker3" fullWidth/>
+             size="small"name="tracker3" value={tracker3} label="tracker3" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker4" fullWidth/>
+             size="small"name="tracker4" value={tracker4} label="tracker4" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker5" fullWidth/>
+             size="small"name="tracker5" value={tracker5} label="tracker5" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker6" fullWidth/>
+             size="small"name="tracker6" value={tracker6} label="tracker6" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker7" fullWidth/>
+             size="small"name="tracker7" value={tracker7} label="tracker7" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker8" fullWidth/>
+             size="small"name="tracker8" value={tracker8} label="tracker8" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker9" fullWidth/>
+             size="small"name="tracker9" value={tracker9} label="tracker9" fullWidth onChange={storeChange}/>
              </Grid>
              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
             <TextField
-             size="small" label="tracker10" fullWidth/>
+             size="small"name="tracker10" value={tracker10} label="tracker10" fullWidth onChange={storeChange}/>
              </Grid>
           <Grid
             container

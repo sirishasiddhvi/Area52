@@ -10,7 +10,7 @@ import {
   TableRow,
   TableHead,
   Stack,
-  TextField,
+  TextField,Dialog,DialogContent,DialogContentText,IconButton
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -77,6 +77,7 @@ export function StoreInfo() {
               p: 1,
               display: "flex",
               height: 500,
+              width:1200,
               overflow: "hidden",
             }}
           >
@@ -118,7 +119,34 @@ export function StoreInfo() {
                       <Typography>Status of Store</Typography>
                     </TableCell>
                     <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
-                      <Typography>Footage</Typography>
+                      <Typography>Tracker1</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker2</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker3</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker4</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker5</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker6</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker7</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker8</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker9</Typography>
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
+                      <Typography>Tracker10</Typography>
                     </TableCell>
 
                     <TableCell sx={{ backgroundColor: "#2f7d32",color:"white" }}>
@@ -143,7 +171,16 @@ export function StoreInfo() {
                         <TableCell>{data.store_region}</TableCell>
                         <TableCell>{data.store_type}</TableCell>
                         <TableCell>{data.store_status}</TableCell>
-                        <TableCell>{data.store_foot_m2}</TableCell>
+                        <TableCell>{data.tracker1}</TableCell>
+                        <TableCell>{data.tracker2}</TableCell>
+                        <TableCell>{data.tracker3}</TableCell>
+                        <TableCell>{data.tracker4}</TableCell>
+                        <TableCell>{data.tracker5}</TableCell>
+                        <TableCell>{data.tracker6}</TableCell>
+                        <TableCell>{data.tracker7}</TableCell>
+                        <TableCell>{data.tracker8}</TableCell>
+                        <TableCell>{data.tracker9}</TableCell>
+                        <TableCell>{data.tracker10}</TableCell>
                         <TableCell>
                           <Button
                             variant="contained"
@@ -161,12 +198,21 @@ export function StoreInfo() {
                 )}
               </Table>
             </TableContainer>
-            {loading && (
-              <div style={{ textAlign: "center" }}>
-                <CircularProgress />
-                <Typography variant="h4">Please wait.....</Typography>
-              </div>
-            )}
+            <Dialog open={loading} onClose={() => {}}>
+        <DialogContent>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <IconButton>
+              <CircularProgress />
+            </IconButton>
+            <DialogContentText>Please wait....</DialogContentText>
+          </Grid>
+        </DialogContent>
+      </Dialog>
           </Box>
         </div>
       </Box>

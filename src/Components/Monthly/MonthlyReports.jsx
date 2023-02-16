@@ -14,11 +14,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Paper,
+  Paper,DialogContentText
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { SnackContext, UserContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 import CircularProgress from "@mui/material/CircularProgress";
 const axios = require("axios");
 const years = [
@@ -38,23 +39,44 @@ const years = [
 export function MonthlyReports() {
   const { userProfile, setUserProfile } = useContext(UserContext);
   const { snack, setSnack } = useContext(SnackContext);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState(undefined);
   const [name, setName] = useState();
-  const [year,setYear] = useState();
   const [dialog_open, setDialog_open] = useState(false);
   const [month_value, setMonth_value] = useState({});
   const [opend, setOpend] = useState(false);
   const [openr, setOpenr] = useState(false);
   const [opende, setOpende] = useState(false);
   const navigate = useNavigate();
-  
-  // useEffect(() => {
-  //   getdata();
-  // }, []);
+  var today= new Date();
+  var month_now= moment(today).format('MMMM')
+  if (month_now=="January"||month_now=="February"||month_now=="March"){
+    var year_now=moment(today).format('YYYY')-1
+    console.log(year_now)
+  }else{
+    var year_now=moment(today).format('YYYY')
+  }
+  const [year_1,setYear_1]= useState(year_now)
+  const [year,setYear] = useState(year_1+"-"+(year_1+1));
+
+  useEffect(() => {
+    const formdata= new FormData()
+    formdata.append("year",year_1)
+    formdata.append("year1",year_1+1)
+    axios.post("/api/monthly_reports",formdata).then((res) => {
+      if (res.data.status === true) {
+        console.log("hi");
+        console.log(res.data.data);
+        setData(res.data.data);
+        setLoading(false);
+      } else {
+      }
+    });
+  }, []);
 
   const getdata = async () => {
+    // setLoading(true)
    const years = year.split("-");
     console.log(years[0]);
     console.log(years[1]);
@@ -73,6 +95,7 @@ export function MonthlyReports() {
         console.log("heloooo");
       }
     });
+    console.log(data)
   };
 
   const handleApprove = async (tempData) => {
@@ -299,38 +322,38 @@ export function MonthlyReports() {
             <Table stickyHeader size="small">
               <TableHead sx={{ backgroundColor: "#2f7d32" }}>
                 <TableRow>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Month</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Month Name</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Service from</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Service to</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Approved Status</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Approval Button</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > View Report</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography  > Delete Report</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Approved By</Typography>
                   </TableCell>
-                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white"}}>
+                  <TableCell  sx={{backgroundColor: "#2f7d32",color:"white",width:"25%"}}>
                     <Typography > Updated By</Typography>
                   </TableCell>
                 </TableRow>
-              </TableHead>
+              </TableHead>{console.log(data)}
               {
               loading ? (
                 <></>
@@ -346,7 +369,7 @@ export function MonthlyReports() {
 
                       <TableCell>
                         <div>
-                          {i.approve_status !== "approved" ? (
+                          {i.approve_status !== "Approved" ? (
                             <>
                               <Button
                                 variant="contained"
@@ -414,16 +437,15 @@ export function MonthlyReports() {
                     </TableRow>
                   </TableBody>
                 ))
-              )}
+             ) }
             </Table>
           </TableContainer>
         </Box>
-        {/* {loading && (
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress />
-            <Typography variant="h4">Please wait......</Typography>
-          </div>
-        )} */}
+        {/* <Dialog open={loading} onClose={() => {}}>
+            <DialogContent>
+              <DialogContentText>Please wait....</DialogContentText>
+            </DialogContent>
+          </Dialog> */}
         <Dialog
           open={opend}
           onClose={() => {
@@ -436,7 +458,7 @@ export function MonthlyReports() {
               variant="contained"
               color="success"
               onClick={() => {
-                handleApprove("approved");
+                handleApprove("Approved");
               }}
             >
               Yes
@@ -465,7 +487,7 @@ export function MonthlyReports() {
               variant="contained"
               color="success"
               onClick={() => {
-                handleReject("rejected");
+                handleReject("Rejected");
               }}
             >
               Yes
