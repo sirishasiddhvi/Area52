@@ -47,7 +47,7 @@ export function Routers(){
         />
         <Route
           path="followup"
-          element={userProfile ? <FollowUp2 /> : <Navigate to="/" />}
+          element={userProfile ? <FollowUp1 /> : <Navigate to="/" />}
         />
         {/* <Route
           path="editfollowup"

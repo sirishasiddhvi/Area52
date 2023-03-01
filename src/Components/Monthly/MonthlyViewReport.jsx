@@ -90,6 +90,7 @@ export function MonthlyViewReport() {
     { name: "R404-kg", selector: "r404___kg", sortable: true ,width:"5%"},
     { name: "R407-kg", selector: "r407___kg", sortable: true ,width:"5%"},
     { name: "Other-Kg", selector: "other___kg", sortable: true ,width:"5%"},
+    
   ];
   const tableData = {
     columns,
