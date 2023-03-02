@@ -179,7 +179,7 @@ export function FollowUp1() {
       });
   };
   const columns = [
-    { field: "id", headerName: "ID", width: 80 , headerClassName: "follow",},
+    // { field: "id", headerName: "ID", width: 80 , headerClassName: "follow",},
     { field: "store_no", headerName: "Store No.", width: 80 , headerClassName: "follow",},
     { field: "store_code", headerName: "Store Code", width: 90 , headerClassName: "follow",},
     { field: "store_name", headerName: "Store Name", width: 200 , headerClassName: "follow",},
@@ -258,15 +258,22 @@ export function FollowUp1() {
   })
 }
   return (
-    <Box sx={{ m: 12,
-    width: "100%", }}>
+    <Box sx={{ m: 12, 
+    width: "70%", 
+  }}>
       <Grid
         container
         direction="row"
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography variant="h4">Follow Up</Typography>
+         <Grid
+        container
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="center"
+      >
+        <Typography variant="h4">Follow Up</Typography>&nbsp;&nbsp;
         <Button
           disabled={selectionModel.length === 0 ? true : false}
           variant="contained"
@@ -274,14 +281,21 @@ export function FollowUp1() {
           onClick={() => setOpen_update(true)}
         >
           update
-        </Button>
+        </Button></Grid>
+        <Grid
+        container
+        direction="row"
+        spacing={2}
+        justifyContent="flex-end"
+        alignItems="center"
+      >
         {/* <Button
           variant="contained"
           size="small"
           onClick={monthSummary}
         >
         summary
-        </Button> */}
+        </Button>&nbsp;&nbsp; */}
         <form onSubmit={monthSubmit}>
           <TextField
             select
@@ -293,7 +307,7 @@ export function FollowUp1() {
             value={month}
             sx={{
               borderRadius: "8px",
-              width: "50%",
+              width: 100,
             }}
             onChange={(e) => setMonth(e.target.value)}
           >
@@ -306,12 +320,12 @@ export function FollowUp1() {
           </Button>
         </form>
       </Grid>
-
+</Grid>
       <Box
         sx={{
           my: 5,
-          height: "220%",
-          width: "100%",
+          height: "250%",
+          // width: "90%",
           backgroundColor: "white"
         }}
       >
@@ -336,17 +350,48 @@ export function FollowUp1() {
           }}
         ><DialogContent>
         <DialogContentText>
-    <div>
-    Month:{summary.month}<br/>
-    FollowUp1(No):{summary.follow1no}<br/>
-    FollowUp1(Yes):{summary.follow1yes}<br/>
-    FollowUp2(No):{summary.follow2no}<br/>
-    FollowUp2(Yes):{summary.follow2yes}<br/>
-    FollowUp3(No):{summary.follow3no}<br/>
-    FollowUp3(Yes):{summary.follow3yes}<br/>
-    BillPaid(No):{summary.billpaidno}<br/>
-    BillPaid(Yes):{summary.billpaidyes}
-        </div>  
+   <Box sx={{p:4}}>
+   <Typography variant="h4"align="center">Summary</Typography><hr/>
+    <Typography variant="h6"align="center">Month : {summary.month}</Typography>
+         <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>summary</TableCell>
+            <TableCell>Yes</TableCell>
+            <TableCell>No</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Follow-Up1</TableCell>
+            <TableCell>{summary.follow1yes}</TableCell>
+            <TableCell> {summary.follow1no}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Follow-Up2</TableCell>
+            <TableCell>{summary.follow2yes}</TableCell>
+            <TableCell>{summary.follow2no}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Follow-Up3</TableCell>
+            <TableCell>{summary.follow3yes}</TableCell>
+            <TableCell>{summary.follow3no}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Bill Paid</TableCell>
+            <TableCell>{summary.billpaidyes}</TableCell>
+            <TableCell>{summary.billpaidno}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <Grid item
+    direction="row"
+    justifyContent="center"
+    alignItems="center">
+    <Button variant="contained" size="small" type="button" alignItems="center" sx={{m:2,mx:8}}onClick={()=>setOpen_summary(false)}>ok</Button></Grid>
+        </Box>
           </DialogContentText>
           </DialogContent>
         </Dialog>
